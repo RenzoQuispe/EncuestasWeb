@@ -1,0 +1,1 @@
+## Plataforma de Encuestas (Django-MySQL-Angular)
