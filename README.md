@@ -4,3 +4,6 @@
 - Admin puede ver estadísticas en tiempo real.
 
 #### Setup .env
+```
+PORT=
+```
