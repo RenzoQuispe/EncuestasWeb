@@ -1,2 +1,13 @@
 *node_modules
 *.env
+# Compilacion Angular
+dist/
+.angular/
+# Archivos temporales
+*.log
+*.tmp
+*.swp
+*.swo
+# IDEs y editores
+.vscode/
+.idea/
