@@ -3,9 +3,10 @@
 #### Instalacion de dependencias
 ```
 npm init -y
-npm install express cors dotenv
+npm install express cors dotenv mysql2
 npm install -D typescript ts-node-dev @types/node @types/express
 npm install --save-dev @types/cors
+npm install --save-dev @types/mysql2
 ```
 #### Inicializar TypeScript
 ```

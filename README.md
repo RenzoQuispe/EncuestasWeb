@@ -6,4 +6,7 @@
 #### Setup .env
 ```
 PORT=
+DB_username=
+DB_password=
+DB_database=
 ```
