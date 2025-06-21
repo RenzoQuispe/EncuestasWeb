@@ -1,4 +1,4 @@
-import { Request,Response } from "express";
+import { Request, Response } from "express";
 import { db } from "../database";
 import { createAccessToken } from "../libs/jwt";
 import bcrypt from "bcryptjs";
@@ -50,9 +50,39 @@ export const register = async (req: Request, res: Response): Promise<void> => {
         // crear y enviar token
         createAccessToken(nuevoUsuarioId, res);
         res.status(201).json({ message: "Usuario registrado exitosamente", userId: nuevoUsuarioId });
+        console.log("Registro exitoso :D")
 
     } catch (err) {
         console.error('Error al registrar usuario:', err);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 };
+export const login = async (req: Request, res: Response): Promise<void> => {
+    const { email, contraseña } = req.body;
+    try {
+        const [result] = await db.query('SELECT * FROM usuarios WHERE email = ?',[email])
+        const emailEncontrados = result as any[];
+        if(emailEncontrados.length === 0){
+            res.status(500).json({error: 'No hay un usuario registrado con ese email'})
+            return
+        }
+        const usuario = emailEncontrados[0];
+        const match = await bcrypt.compare(contraseña, usuario.contraseña);
+        if (!match) {
+            res.status(401).json({ message: 'Contraseña incorrecta' });
+            return
+        }
+        createAccessToken(usuario.id, res);
+        res.status(200).json({
+            id: usuario.id,
+            username: usuario.username,
+            email: usuario.email,
+            fotoperfil: usuario.fotoperfil
+        });
+        console.log("Logeo exitoso :D")
+
+    } catch (err) {
+        console.error('Error al logear usuario:', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
