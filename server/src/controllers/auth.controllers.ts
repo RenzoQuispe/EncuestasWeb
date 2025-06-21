@@ -86,3 +86,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
+export const logout = async (req: Request,res:Response): Promise<void> => {
+    try{
+        res.cookie('jwt_', '', {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+            expires: new Date(0),
+            maxAge: 0
+        });
+        res.status(200).json({ message: "Cerró cesión correactamente :D" });
+    }catch(err){
+        console.error('Error logout', err);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+}
