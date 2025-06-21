@@ -49,7 +49,12 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 
         // crear y enviar token
         createAccessToken(nuevoUsuarioId, res);
-        res.status(201).json({ message: "Usuario registrado exitosamente", userId: nuevoUsuarioId });
+        res.status(200).json({
+            id: nuevoUsuarioId,
+            username: username,
+            email: email,
+            fotoperfil: ""
+        });
         console.log("Registro exitoso :D")
 
     } catch (err) {
@@ -60,10 +65,10 @@ export const register = async (req: Request, res: Response): Promise<void> => {
 export const login = async (req: Request, res: Response): Promise<void> => {
     const { email, contraseña } = req.body;
     try {
-        const [result] = await db.query('SELECT * FROM usuarios WHERE email = ?',[email])
+        const [result] = await db.query('SELECT * FROM usuarios WHERE email = ?', [email])
         const emailEncontrados = result as any[];
-        if(emailEncontrados.length === 0){
-            res.status(500).json({error: 'No hay un usuario registrado con ese email'})
+        if (emailEncontrados.length === 0) {
+            res.status(500).json({ error: 'No hay un usuario registrado con ese email' })
             return
         }
         const usuario = emailEncontrados[0];
@@ -86,8 +91,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
-export const logout = async (req: Request,res:Response): Promise<void> => {
-    try{
+export const logout = async (req: Request, res: Response): Promise<void> => {
+    try {
         res.cookie('jwt_', '', {
             httpOnly: true,
             secure: true,
@@ -96,8 +101,16 @@ export const logout = async (req: Request,res:Response): Promise<void> => {
             maxAge: 0
         });
         res.status(200).json({ message: "Cerró cesión correactamente :D" });
-    }catch(err){
+    } catch (err) {
         console.error('Error logout', err);
-        res.status(500).json({ error: 'Error interno del servidor' });
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+}
+export const check = async (req: Request, res: Response): Promise<void> => {
+    try {
+        res.status(200).json(req.user);
+    } catch (err) {
+        console.log("Erro check auth", err)
+        res.status(500).json({ error: "Error interno del servidor" })
     }
 }
